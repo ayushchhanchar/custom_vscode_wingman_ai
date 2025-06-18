@@ -51,6 +51,14 @@
 			}
 		},
 		{
+			"extension": "wingman-ai",
+			"version": "0.0.1",
+			"metadata": {
+			"isBuiltin": true,
+			"isSystem": true
+			}
+		},
+		{
 			"name": "ms-vscode.js-debug",
 			"version": "1.100.1",
 			"sha256": "8c2218df3422d45b95e96d9d28cdc4aa4426a2799aaaedd862d3f60ecab03844",
