@@ -21,11 +21,11 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Compile VS Code
+      - name: Compile VS Code for Windows
         run: npm run gulp vscode-win32-x64
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v3
         with:
           name: vscode-portable
-          path: .build/win32-x64/user-setup/
+          path: .build\win32-x64\user-setup\
