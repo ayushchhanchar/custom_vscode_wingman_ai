@@ -25,7 +25,7 @@ jobs:
         run: npm run gulp vscode-win32-x64
 
       - name: Upload Build Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: vscode-portable
           path: .build\win32-x64\user-setup\
