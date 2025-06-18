@@ -50,14 +50,7 @@
 				"publisherDisplayName": "Microsoft"
 			}
 		},
-		{
-			"extension": "wingman-ai",
-			"version": "0.0.1",
-			"metadata": {
-			"isBuiltin": true,
-			"isSystem": true
-			}
-		},
+		
 		{
 			"name": "ms-vscode.js-debug",
 			"version": "1.100.1",
