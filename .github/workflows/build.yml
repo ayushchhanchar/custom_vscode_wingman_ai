@@ -10,22 +10,28 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout Repo
+      - name: 📥 Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
+      - name: 🧰 Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
 
-      - name: Install Dependencies
+      - name: 📦 Install Root Dependencies
         run: npm install
 
-      - name: Compile VS Code for Windows
-        run: npm run gulp vscode-win32-x64
+      - name: 📦 Install Wingman AI Dependencies
+        run: |
+          cd extensions/wingman-ai
+          npm install
+          cd ../../
 
-      - name: Upload Build Artifact
+      - name: 🛠 Compile VS Code with Gulp
+        run: npm run gulp vscode-win32-x64-archive
+
+      - name: 📤 Upload Portable Build
         uses: actions/upload-artifact@v4
         with:
           name: vscode-portable
-          path: .build\win32-x64\user-setup\
+          path: .build\win32-x64\archive\
