@@ -1,79 +1,152 @@
-# Visual Studio Code - Open Source ("Code - OSS")
+# 🧠 Custom Visual Studio Code with Built-In Wingman AI
 
-[![Feature Requests](https://img.shields.io/github/issues/microsoft/vscode/feature-request.svg)](https://github.com/microsoft/vscode/issues?q=is%3Aopen+is%3Aissue+label%3Afeature-request+sort%3Areactions-%2B1-desc)
-[![Bugs](https://img.shields.io/github/issues/microsoft/vscode/bug.svg)](https://github.com/microsoft/vscode/issues?utf8=✓&q=is%3Aissue+is%3Aopen+label%3Abug)
-[![Gitter](https://img.shields.io/badge/chat-on%20gitter-yellow.svg)](https://gitter.im/Microsoft/vscode)
+This project is a fully customized fork of [Visual Studio Code (OSS)](https://github.com/microsoft/vscode) where the [Wingman AI](https://github.com/RussellCanfield/wingman-ai) extension has been deeply integrated as a **native, built-in component**. The extension runs on startup, is hidden from the Extensions UI, and provides intelligent code suggestions and automation without being removable or visible to the user.
 
-## The Repository
+The build process is managed via a **GitHub Actions CI/CD pipeline**, making it fully reproducible and cloud-executed — even on machines that can't compile VS Code locally due to hardware limitations.
 
-This repository ("`Code - OSS`") is where we (Microsoft) develop the [Visual Studio Code](https://code.visualstudio.com) product together with the community. Not only do we work on code and issues here, we also publish our [roadmap](https://github.com/microsoft/vscode/wiki/Roadmap), [monthly iteration plans](https://github.com/microsoft/vscode/wiki/Iteration-Plans), and our [endgame plans](https://github.com/microsoft/vscode/wiki/Running-the-Endgame). This source code is available to everyone under the standard [MIT license](https://github.com/microsoft/vscode/blob/main/LICENSE.txt).
+---
 
-## Visual Studio Code
+## 🚀 Project Goals
 
-<p align="center">
-  <img alt="VS Code in action" src="https://user-images.githubusercontent.com/35271042/118224532-3842c400-b438-11eb-923d-a5f66fa6785a.png">
-</p>
+- 📦 Package Wingman AI into VS Code as a **built-in** extension
+- 🚫 Prevent user from disabling/uninstalling it
+- ☁️ Offload heavy build tasks to GitHub Actions
+- 🧪 Ensure the build is **reproducible** and **extensible**
+- ✅ Produce a final `.exe` or `.zip` version of VS Code with AI integrated
 
-[Visual Studio Code](https://code.visualstudio.com) is a distribution of the `Code - OSS` repository with Microsoft-specific customizations released under a traditional [Microsoft product license](https://code.visualstudio.com/License/).
+---
 
-[Visual Studio Code](https://code.visualstudio.com) combines the simplicity of a code editor with what developers need for their core edit-build-debug cycle. It provides comprehensive code editing, navigation, and understanding support along with lightweight debugging, a rich extensibility model, and lightweight integration with existing tools.
+## 🔧 Tech Stack
 
-Visual Studio Code is updated monthly with new features and bug fixes. You can download it for Windows, macOS, and Linux on [Visual Studio Code's website](https://code.visualstudio.com/Download). To get the latest releases every day, install the [Insiders build](https://code.visualstudio.com/insiders).
+| Category           | Tools & Technologies                         |
+|-------------------|-----------------------------------------------|
+| Editor Base        | [VS Code OSS](https://github.com/microsoft/vscode) |
+| AI Integration     | [Wingman AI](https://github.com/RussellCanfield/wingman-ai) |
+| Build Tools        | Gulp, Node.js, NPM                           |
+| DevOps & CI/CD     | GitHub Actions                               |
+| System Integration | Electron, Windows `.exe` packaging (user-setup) |
+| Configuration      | `extensions.json`, `product.json`, `gulpfile.js` |
 
-## Contributing
+---
 
-There are many ways in which you can participate in this project, for example:
+## 🛠️ Setup & How It Works
 
-* [Submit bugs and feature requests](https://github.com/microsoft/vscode/issues), and help us verify as they are checked in
-* Review [source code changes](https://github.com/microsoft/vscode/pulls)
-* Review the [documentation](https://github.com/microsoft/vscode-docs) and make pull requests for anything from typos to additional and new content
+### 1. Fork & Clone
+```bash
+git clone https://github.com/<your-username>/vscode.git
+cd vscode
+```
 
-If you are interested in fixing issues and contributing directly to the code base,
-please see the document [How to Contribute](https://github.com/microsoft/vscode/wiki/How-to-Contribute), which covers the following:
+### 2. Add Wingman AI
+Clone the extension into VS Code's internal folder:
+```bash
+git clone https://github.com/RussellCanfield/wingman-ai.git
+xcopy wingman-ai extensions\wingman-ai /E /I /Y
+```
 
-* [How to build and run from source](https://github.com/microsoft/vscode/wiki/How-to-Contribute)
-* [The development workflow, including debugging and running tests](https://github.com/microsoft/vscode/wiki/How-to-Contribute#debugging)
-* [Coding guidelines](https://github.com/microsoft/vscode/wiki/Coding-Guidelines)
-* [Submitting pull requests](https://github.com/microsoft/vscode/wiki/How-to-Contribute#pull-requests)
-* [Finding an issue to work on](https://github.com/microsoft/vscode/wiki/How-to-Contribute#where-to-contribute)
-* [Contributing to translations](https://aka.ms/vscodeloc)
+Ensure subfolders like `shared/` and `views-ui/` exist inside `wingman-ai`.
 
-## Feedback
+### 3. Register as Built-In
+Create or update:
+📄 `build/extensions.json`
+```json
+[
+  { "name": "wingman-ai", "repo": "local" }
+]
+```
 
-* Ask a question on [Stack Overflow](https://stackoverflow.com/questions/tagged/vscode)
-* [Request a new feature](CONTRIBUTING.md)
-* Upvote [popular feature requests](https://github.com/microsoft/vscode/issues?q=is%3Aopen+is%3Aissue+label%3Afeature-request+sort%3Areactions-%2B1-desc)
-* [File an issue](https://github.com/microsoft/vscode/issues)
-* Connect with the extension author community on [GitHub Discussions](https://github.com/microsoft/vscode-discussions/discussions) or [Slack](https://aka.ms/vscode-dev-community)
-* Follow [@code](https://twitter.com/code) and let us know what you think!
+### 4. Setup GitHub Actions Workflow
+Create `.github/workflows/build.yml` with:
+- Node install
+- Extension dependency install
+- Gulp build
+- Upload artifact step
 
-See our [wiki](https://github.com/microsoft/vscode/wiki/Feedback-Channels) for a description of each of these channels and information on some other available community-driven channels.
+See: [build.yml](.github/workflows/build.yml)
 
-## Related Projects
+### 5. Trigger CI Build
+```bash
+git add .
+git commit -m "Add Wingman AI as built-in + CI setup"
+git push origin main
+```
 
-Many of the core components and extensions to VS Code live in their own repositories on GitHub. For example, the [node debug adapter](https://github.com/microsoft/vscode-node-debug) and the [mono debug adapter](https://github.com/microsoft/vscode-mono-debug) repositories are separate from each other. For a complete list, please visit the [Related Projects](https://github.com/microsoft/vscode/wiki/Related-Projects) page on our [wiki](https://github.com/microsoft/vscode/wiki).
+Go to GitHub → **Actions tab** → Wait for the run → Download artifact from “vscode-portable”.
 
-## Bundled Extensions
+---
 
-VS Code includes a set of built-in extensions located in the [extensions](extensions) folder, including grammars and snippets for many languages. Extensions that provide rich language support (code completion, Go to Definition) for a language have the suffix `language-features`. For example, the `json` extension provides coloring for `JSON` and the `json-language-features` extension provides rich language support for `JSON`.
+## ✅ What’s Working
 
-## Development Container
+- Wingman AI loads at startup with **no UI listing**
+- All build steps (install, compile, bundle) succeed on GitHub Actions
+- Project is fully reproducible with clear workflow
+- Integrated seamlessly into the official VS Code architecture
 
-This repository includes a Visual Studio Code Dev Containers / GitHub Codespaces development container.
+---
 
-* For [Dev Containers](https://aka.ms/vscode-remote/download/containers), use the **Dev Containers: Clone Repository in Container Volume...** command which creates a Docker volume for better disk I/O on macOS and Windows.
-  * If you already have VS Code and Docker installed, you can also click [here](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/microsoft/vscode) to get started. This will cause VS Code to automatically install the Dev Containers extension if needed, clone the source code into a container volume, and spin up a dev container for use.
+## ⚠️ Known Issues
 
-* For Codespaces, install the [GitHub Codespaces](https://marketplace.visualstudio.com/items?itemName=GitHub.codespaces) extension in VS Code, and use the **Codespaces: Create New Codespace** command.
+- The `.exe` portable build occasionally fails on GitHub CI due to VS Code packaging limitations
+- Local builds are resource-intensive and may freeze low-spec systems
+- File-based dependencies like `shared/` and `views-ui/` must be manually preserved
 
-Docker / the Codespace should have at least **4 Cores and 6 GB of RAM (8 GB recommended)** to run full build. See the [development container README](.devcontainer/README.md) for more information.
+---
 
-## Code of Conduct
+## 📂 Folder Structure Summary
 
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+```
+vscode/
+├── .github/
+│   └── workflows/
+│       └── build.yml
+├── extensions/
+│   └── wingman-ai/
+│       ├── shared/
+│       ├── views-ui/
+│       └── package.json
+├── build/
+│   └── extensions.json
+├── product.json
+├── .vscode/
+└── gulpfile.js
+```
 
-## License
+---
 
-Copyright (c) Microsoft Corporation. All rights reserved.
+## 📤 CI/CD Pipeline Highlights
 
-Licensed under the [MIT](LICENSE.txt) license.
+- Runs on `push` to `main`
+- Uses `windows-latest` runner
+- Builds `vscode-win32-x64-user-setup`
+- Uploads `.exe`/`.zip` from `build/user-setup/`
+- Separate `npm install` for root and wingman extension
+
+---
+
+## 📈 What I Learned
+
+- Deep understanding of VS Code’s internal architecture
+- Native packaging and extension hiding techniques
+- GitHub Actions, caching, dependency resolution
+- Real-world debugging of `node-gyp`, `npm`, `gulp`, and Electron
+
+---
+
+## ✍️ Author
+
+**Ayush Chhanchar**  
+🔗 [LinkedIn](https://linkedin.com/in/ayushchhanchar)  
+📁 [GitHub Portfolio](https://github.com/ayushchhanchar)  
+📧 [Email me](mailto:your.email@example.com)
+
+---
+
+## ⭐ Final Notes
+
+This repo reflects my practical experience with real-world developer tooling. I built it to demonstrate my ability to work with:
+- Large open-source codebases
+- Low-level extension integration
+- Cloud automation pipelines
+- DevOps and system-level customization
+
+Feel free to fork this repo or reach out if you'd like to collaborate!
